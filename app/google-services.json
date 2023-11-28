@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "594687169942",
+    "project_id": "goodplacealimi",
+    "storage_bucket": "goodplacealimi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594687169942:android:46b16d0c3fc19228cc79b7",
+        "android_client_info": {
+          "package_name": "com.example.bottomnavi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXVOtM8u3GwZY3UAT64OUuF-YuadYwU3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

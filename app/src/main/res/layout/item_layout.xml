@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="460sp"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/itemTextViewNickName"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/toolbar"
+        android:text="Your Text Here"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/itemImageView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/itemTextViewNickName"
+        android:layout_marginLeft="24sp"
+        android:layout_marginTop="4dp"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/itemTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/itemImageView"
+        android:layout_marginTop="12dp"
+        android:text="Your Text Here"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/itemTextViewLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/itemTextView"
+        android:layout_marginTop="7dp"
+        android:text="Your Location Here"
+        android:textSize="16sp" />
+
+    <CheckBox
+        android:id="@+id/likeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="33dp"
+        android:layout_toEndOf="@id/itemTextViewNickName"
+        android:background="@null"
+        android:button="@drawable/heart_selector"></CheckBox>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/itemTextViewLocation"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="24dp"
+        android:background="@color/purple_200" />
+
+
+</RelativeLayout>
