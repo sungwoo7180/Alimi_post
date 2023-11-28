@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-storage:20.0.0' // 최신 버전으로 업데이트할 수 있습니다.
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
