@@ -24,6 +24,7 @@ public class PostData {
     public String getImageUrl() {
         return imageUrl;
     }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public String getLocation() { return location; }
     public String getUserEmail() {return userEmail;}
 }

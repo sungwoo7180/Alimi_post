@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,18 +23,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class Frag2 extends Fragment {
     private static final int PICK_IMAGE = 1;
     private Uri selectedImageUri;
-    private DatabaseReference databaseReference; //파이어베이스
-    private StorageReference storageReference; // Firebase Storage 레퍼런스
-
+    private DatabaseReference databaseReference; // 파이어베이스
+    private StorageReference storageReference; // Firebase Storage 참조
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frag2, container, false);
-        Log.d("프래그2", "onCreateView() called"); // 추가된 로그
-        return view;
+        return inflater.inflate (R.layout.frag2, container, false);
     }
 
     @Override
@@ -45,12 +42,11 @@ public class Frag2 extends Fragment {
         View toolbarView = view.findViewById(R.id.tb_frag2);
         TextView toolbarTitle = toolbarView.findViewById(R.id.textView_toolbar_title);
         toolbarTitle.setText("글 등록");
-
+        databaseReference = FirebaseDatabase.getInstance().getReference("posts"); // 파이어베이스에 POSTS라는 키로 값을 보냄
+        storageReference = FirebaseStorage.getInstance().getReference().child("images"); // 이미지를 저장할 Firebase Storage 경로
         // Firebase에서 현재 사용자 가져오기
-        databaseReference = FirebaseDatabase.getInstance().getReference("posts");   // 파이어베이스에 POSTS라는 키로 값을 보냄
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userEmail = user.getEmail(); // 현재 사용자의 이메일 가져오기
-        storageReference = FirebaseStorage.getInstance().getReference().child("images");    // 이미지를 업로드할 Firebase Storage 레퍼런스 설정
         Button chooseImageButton = view.findViewById(R.id.chooseImageButton2); //이미지 선택 버튼
         Button postButton = view.findViewById(R.id.postButton2); //게시 버튼
         ImageButton postButton3 = view.findViewById(R.id.postButton3); // 게시 이미지 버튼 3
@@ -61,6 +57,7 @@ public class Frag2 extends Fragment {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
         Query query = userRef.orderByChild("email").equalTo(userEmail);
 
+        // 이미지 선택 버튼
         chooseImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,33 +73,29 @@ public class Frag2 extends Fragment {
                 String userText = editText.getText().toString(); //게시글 작성한 부분을 userText에 저장
                 String locationText = editTextLocation.getText().toString();
 
-                if (selectedImageUri != null) {
-                    // postId는 push() 메서드로 생성
-                    String postId = databaseReference.push().getKey();
+                if (selectedImageUri != null && user != null) {
+                    StorageReference imageReference = storageReference.child(System.currentTimeMillis() + ".jpg");
+                    UploadTask uploadTask = imageReference.putFile(selectedImageUri);
 
-                    // 이미지를 Storage에 업로드
-                    StorageReference imageRef = storageReference.child(postId + ".jpg");
-                    imageRef.putFile(selectedImageUri)
-                            .addOnSuccessListener(taskSnapshot -> {
-                                // 이미지가 업로드된 경우
-                                imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                    // 이미지의 다운로드 URL 획득
-                                    String imageUrl = uri.toString();
-
-                                    // 데이터베이스에 저장할 PostData 객체 생성
-                                    PostData post = new PostData(userText, imageUrl, locationText, userEmail);
-
-                                    // 데이터베이스에 데이터 저장
-                                    if (postId != null) {
-                                        databaseReference.child(postId).setValue(post);
-                                        showToast("게시글이 성공적으로 저장되었습니다.");
-                                    }
-                                });
-                            })
-                            .addOnFailureListener(e -> {
-                                // 이미지 업로드 실패 시 처리
-                                showToast("이미지 업로드에 실패했습니다.");
-                            });
+                    uploadTask.continueWithTask(task -> {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return imageReference.getDownloadUrl();
+                    }).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+                            String imageUrl = downloadUri.toString();
+                            String postId = databaseReference.push().getKey();
+                            PostData post = new PostData(userText, imageUrl, locationText, userEmail);
+                            if (postId != null) {
+                                databaseReference.child(postId).setValue(post);
+                                showToast("게시글이 성공적으로 저장되었습니다.");
+                            }
+                        } else {
+                            showToast("이미지 업로드에 실패했습니다.");
+                        }
+                    });
                 }
             }
         });

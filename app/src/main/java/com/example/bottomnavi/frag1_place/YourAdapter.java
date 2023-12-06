@@ -1,5 +1,6 @@
 package com.example.bottomnavi.frag1_place;
 // YourAdapter.java
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bottomnavi.R;
 import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class YourAdapter extends RecyclerView.Adapter<YourAdapter.ViewHolder> {
 
     private List<YourItem> items;
+    //private Context context;
 
     public YourAdapter(List<YourItem> items) {
         this.items = items;
